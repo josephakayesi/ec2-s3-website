@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# This script sets up a static website on an EC2 instance and then sets up the same site on S3.
+# This is a bash script that setups a static website on EC2 and then sets up the same site on S3
 
 ################################
 #                              #
@@ -8,7 +8,7 @@
 #                              #
 ################################
 
-# Login as root
+# Login as root 
 sudo su -
 
 # Update all installed packages
@@ -44,30 +44,32 @@ service nginx start
 #                              #
 ################################
 
-# Create environment variables for AWS CLI credentials
-export AWS_ACCESS_KEY_ID="<Enter AWS Access Key ID>"
-export AWS_SECRET_ACCESS_KEY="<Enter AWS Secret Key>"
+# Create environment variable for AWS cli credentials
+AWS_ACCESS_KEY_ID="<Enter AWS Access Key ID>"
+AWS_ACCESS_KEY_SECRET="<Enter AWS Secret Key>"
 
-# Configure AWS CLI with the provided credentials
-aws configure set aws_access_key_id "$AWS_ACCESS_KEY_ID"
-aws configure set aws_secret_access_key "$AWS_SECRET_ACCESS_KEY"
+aws configure set aws_access_key_id "$AWS_ACCESS_KEY_ID" && aws configure set aws_secret_access_key "$AWS_ACCESS_KEY_SECRET"
 
-# Create an environment variable for the S3 bucket name
-S3_BUCKET_NAME="aws-ec2-s3-website-josephakayesi"
+# Create environment variable for S3 bucket name
+S3_BUCKET_NAME="<Enter bucket name>"
 
-# Create an S3 bucket
-aws s3api create-bucket --bucket $S3_BUCKET_NAME 
+# Create S3 bucket
+aws s3api create-bucket \
+--bucket $S3_BUCKET_NAME 
 
-# Enable public access for the S3 bucket
-aws s3api delete-public-access-block --bucket $S3_BUCKET_NAME   
+# Enable public access
+aws s3api delete-public-access-block \
+--bucket $S3_BUCKET_NAME   
 
-# Enable website hosting on the S3 bucket
-aws s3 website s3://$S3_BUCKET_NAME --index-document index.html --error-document index.html 
+# Enable website hosting on your bucket
+aws s3 website s3://$S3_BUCKET_NAME \
+--index-document index.html \
+--error-document index.html 
 
-# Upload website content to the S3 bucket
+# Uplood website content to S3
 aws s3 sync /usr/share/nginx/html/ s3://$S3_BUCKET_NAME 
 
-# Create the S3 bucket policy document
+# echo policy document into policy json file
 echo '{
     "Version": "2012-10-17",
     "Statement": [
@@ -81,8 +83,10 @@ echo '{
     ]
 }' > policy.json
 
-# Apply the policy to the S3 bucket
-aws s3api put-bucket-policy --bucket $S3_BUCKET_NAME --policy file://policy.json
+# apply policy to bucket
+aws s3api put-bucket-policy \
+--bucket $S3_BUCKET_NAME \
+--policy file://policy.json 
 
 # Clean up
 rm policy.json
