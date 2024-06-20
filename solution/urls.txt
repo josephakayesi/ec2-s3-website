@@ -1,0 +1,2 @@
+EC2 = http://ec2-54-167-28-70.compute-1.amazonaws.com/
+S3 = http://aws-ec2-s3-website-josephakayesi.s3-website-us-east-1.amazonaws.com/

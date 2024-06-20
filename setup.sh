@@ -30,7 +30,7 @@ yum install git -y
 rm -rf /usr/share/nginx/html
 
 # Clone the repository to the html directory
-git clone https://github.com/josephakayesi/assignment_files /usr/share/nginx/html 
+git clone https://github.com/3rdsenin/assignment_files /usr/share/nginx/html 
 
 # Enable Nginx to start on boot
 systemctl enable nginx
